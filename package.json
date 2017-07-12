@@ -1,0 +1,9 @@
+{
+  "name": "lambda-logrotate",
+  "version": "",
+  "dependencies": {
+    "aws-sdk": "^2.82.0",
+    "s3-zip": "0.0.13",
+    "xml-stream": "^0.4.5"
+  }
+}
