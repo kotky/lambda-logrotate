@@ -1,5 +1,4 @@
 var fs = require('fs')
-var join = require('path').join
 var AWS = require('aws-sdk')
 var s3Zip = require('s3-zip')
 var XmlStream = require('xml-stream')
@@ -48,7 +47,7 @@ exports.handler = function (event, context) {
    
   function zip(files) {
     console.log(files)
-    var output = fs.createWriteStream('/tmp/use-s3-zip.zip'))
+    var output = fs.createWriteStream('/tmp/use-s3-zip.zip')
     s3Zip
      .archive({ region: region, bucket: bucket }, folder, files)
      .pipe(output)
