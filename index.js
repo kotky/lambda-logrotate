@@ -32,8 +32,7 @@ exports.handler = function (event, context) {
   var files = s3.listObjects(params).createReadStream()
   console.log(files)
   var zipper = new S3Zipper(config);
-  console.log("started preparations")
-  console.log(process.env)
+  
   if (filterByName){
     zipper.filterOutFiles= function(file){
       console.log(file)
