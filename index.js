@@ -1,5 +1,4 @@
 var S3Zipper = require ('aws-s3-zipper');
-var AWS = require('aws-sdk')
 exports.handler = function (event, context) {
   var source_folder = "/"
   var zip_folder = ""
@@ -22,17 +21,8 @@ exports.handler = function (event, context) {
       region: region,
       bucket: bucket
   };
-  var s3 = new AWS.S3({ region: region })
-  var params = {
-    Bucket: bucket,
-    Prefix: source_folder
-  }
 
-  var filesArray = []
-  var files = s3.listObjects(params).createReadStream()
-  console.log(files)
   var zipper = new S3Zipper(config);
-  
   if (filterByName){
     zipper.filterOutFiles= function(file){
       console.log(file)
