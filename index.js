@@ -1,4 +1,5 @@
 var S3Zipper = require ('aws-s3-zipper');
+var AWS = require('aws-sdk')
 exports.handler = function (event, context) {
   var source_folder = "/"
   var zip_folder = ""
