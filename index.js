@@ -47,6 +47,7 @@ exports.handler = function (event, context) {
    
   function zip(files) {
     // Create body stream
+    console.log(files)
     try {
 
       var body = s3Zip.archive({ region: region, bucket: bucket}, source_folder, files)
