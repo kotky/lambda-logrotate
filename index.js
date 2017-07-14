@@ -36,8 +36,8 @@ exports.handler = function (event, context) {
   var xml = new XmlStream(files)
   xml.collect('Key')
   xml.on('endElement: Key', function(item) {
-    console.log(item)
-    filesArray.push(item['$text'].substr(source_folder.length))
+    if (filterByName && item['$text'].indexOf(filterByName)>-1)
+      filesArray.push(item['$text'].substr(source_folder.length))
   })
    
   xml
