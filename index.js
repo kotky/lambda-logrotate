@@ -22,7 +22,15 @@ exports.handler = function (event, context) {
       region: region,
       bucket: bucket
   };
+  var s3 = new AWS.S3({ region: region })
+  var params = {
+    Bucket: bucket,
+    Prefix: source_folder
+  }
 
+  var filesArray = []
+  var files = s3.listObjects(params).createReadStream()
+  console.log(files)
   var zipper = new S3Zipper(config);
   console.log("started preparations")
   console.log(process.env)
