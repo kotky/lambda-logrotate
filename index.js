@@ -32,6 +32,10 @@ exports.handler = function (event, context) {
         return null;
     };
   }
+  zipper.s3buckets.listObjects(params, function (err, data) {
+   if(err)throw err;
+   console.log(data);
+  });
 
   var date = new Date()
   var filename='backup-logger-logs-'+date.toISOString()+'.zip'
