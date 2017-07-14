@@ -46,11 +46,29 @@ exports.handler = function (event, context) {
     })
    
   function zip(files) {
-    console.log(files)
-    var output = fs.createWriteStream('/tmp/use-s3-zip.zip')
-    s3Zip
-     .archive({ region: region, bucket: bucket }, source_folder, files)
-     .pipe(output)
-    console.log("done")
+    // Create body stream
+    try {
+
+      var body = s3Zip.archive({ region: region, bucket: bucket}, source_folder, files)
+      var zip_filename = "__"+new Date()+"logger.zip"
+      var zipParams = { params: { Bucket: bucket, Key: zip_folder + zip_filename } }
+      var zipFile = new AWS.S3(zipParams)
+      zipFile.upload({ Body: body })
+        .on('httpUploadProgress', function (evt) { console.log(evt) })
+        .send(function (e, r) { 
+          if (e) {
+            var err = 'zipFile.upload error ' + e
+            console.log(err)         
+            context.fail(err)
+          } 
+          console.log(r) 
+          context.succeed(r)
+        })
+
+    } catch (e) {
+      var err = 'catched error: ' + e
+      console.log(err)    
+      context.fail(err)
+    }
   }
 }
