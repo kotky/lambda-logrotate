@@ -1,5 +1,18 @@
 var S3Zipper = require ('aws-s3-zipper');
+var AWS = require('aws-sdk');
+AWS.config.update({accessKeyId: process.env.BUCKET_IAM_ACCESS_KEY_ID, secretAccessKey: process.env.BUCKET_IAM_SECRET_ACCESS_KEY, region: 'us-west-2'});
+var s3 = new AWS.S3();
 exports.handler = function (event, context) {
+  var params = { 
+  Bucket: 'txoc-logger',
+  Delimiter: '',
+  Prefix: '' 
+}
+
+s3.listObjects(params, function (err, data) {
+  if(err)throw err;
+  console.log(data);
+});
   var source_folder = "/"
   var zip_folder = ""
   var filterByName = false
