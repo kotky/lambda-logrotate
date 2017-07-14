@@ -37,7 +37,7 @@ exports.handler = function (event, context) {
   xml.collect('Key')
   xml.on('endElement: Key', function(item) {
     if (filterByName && item['$text'].indexOf(filterByName)>-1)
-      filesArray.push(item['$text'].substr(source_folder.length))
+      filesArray.push(item['$text'])
   })
    
   xml
