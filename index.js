@@ -1,6 +1,4 @@
 var S3Zipper = require ('aws-s3-zipper');
-var AWS = require('aws-sdk');
-AWS.config.update({accessKeyId: process.env.BUCKET_IAM_ACCESS_KEY_ID, secretAccessKey: process.env.BUCKET_IAM_SECRET_ACCESS_KEY, region: process.env.BUCKET_REGION, bucket: process.env.BUCKET_NAME});
 exports.handler = function (event, context) {
   var source_folder = ""
   var zip_folder = ""
@@ -17,7 +15,14 @@ exports.handler = function (event, context) {
   if (process.env.BUCKET_SOURCE_INCLUDE_SUBFOLDERS === 'true')
     include_subfolders=true
 
-  var zipper = new S3Zipper();
+  var config ={
+      accessKeyId: process.env.BUCKET_IAM_ACCESS_KEY_ID,
+      secretAccessKey: process.env.BUCKET_IAM_SECRET_ACCESS_KEY,
+      region: region,
+      bucket: bucket
+  };
+
+  var zipper = new S3Zipper(config);
   if (filterByName){
     zipper.filterOutFiles= function(file){
       console.log(file)
