@@ -1,5 +1,4 @@
 var S3Zipper = require ('aws-s3-zipper');
-var config = require('./config')
 exports.handler = function (event, context) {
   var source_folder = "/"
   var zip_folder = ""
@@ -16,8 +15,12 @@ exports.handler = function (event, context) {
   if (process.env.BUCKET_SOURCE_INCLUDE_SUBFOLDERS === 'true')
     include_subfolders=true
 
-  config.region = region
-  config.bucket = bucket
+  var config ={
+      accessKeyId: process.env.BUCKET_IAM_ACCESS_KEY_ID,
+      secretAccessKey: process.env.BUCKET_IAM_SECRET_ACCESS_KEY,
+      region: region,
+      bucket: bucket
+  };
 
   var zipper = new S3Zipper(config);
   console.log("started preparations")
