@@ -37,7 +37,7 @@ exports.handler = function (event, context) {
   xml.collect('Key')
   xml.on('endElement: Key', function(item) {
     console.log(item)
-    filesArray.push(item['$text'].substr(folder.length))
+    filesArray.push(item['$text'].substr(source_folder.length))
   })
    
   xml
@@ -49,7 +49,7 @@ exports.handler = function (event, context) {
     console.log(files)
     var output = fs.createWriteStream('/tmp/use-s3-zip.zip')
     s3Zip
-     .archive({ region: region, bucket: bucket }, folder, files)
+     .archive({ region: region, bucket: bucket }, source_folder, files)
      .pipe(output)
     console.log("done")
   }
