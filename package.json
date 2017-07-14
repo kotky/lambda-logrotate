@@ -1,7 +1,12 @@
 {
-  "name": "lambda-logrotate",
+  "name": "",
   "version": "",
+  "description": "lambda function for automatic log rotate of s3 bucket",
   "dependencies": {
-    "aws-s3-zipper": "https://github.com/kotky/aws-s3-zipper.git"
+    "aws-sdk": "^2.84.0",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "s3-zip": "0.0.13",
+    "xml-stream": "^0.4.5"
   }
 }

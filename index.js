@@ -1,4 +1,9 @@
-var S3Zipper = require ('aws-s3-zipper');
+var fs = require('fs')
+var join = require('path').join
+var AWS = require('aws-sdk')
+var s3Zip = require('s3-zip')
+var XmlStream = require('xml-stream')
+AWS.config.update({accessKeyId: process.env.BUCKET_IAM_ACCESS_KEY_ID, secretAccessKey: process.env.BUCKET_IAM_SECRET_ACCESS_KEY, region: process.env.BUCKET_REGION});
 exports.handler = function (event, context) {
   var source_folder = ""
   var zip_folder = ""
@@ -21,38 +26,32 @@ exports.handler = function (event, context) {
       region: region,
       bucket: bucket
   };
-
-  var zipper = new S3Zipper(config);
-  if (filterByName){
-    zipper.filterOutFiles= function(file){
-      console.log(file)
-      if(file.Key.indexOf(filterByName) >= 0) // zip only filterByName files
-          return file;
-      else 
-        return null;
-    };
+   
+  var s3 = new AWS.S3()
+  var params = {
+    Bucket: bucket
   }
-  console.log(zipper)
-  // zipper.s3buckets.listObjects(params, function (err, data) {
-  //  if(err)throw err;
-  //  console.log(data);
-  // });
-
-  var date = new Date()
-  var filename='backup-logger-logs-'+date.toISOString()+'.zip'
-  /// if no path is given to S3 zip file then it will be placed in the same folder
-  zipper.zipToS3File ({
-          s3FolderName: source_folder,
-          s3ZipFileName: zip_folder+filename,
-          recursive: include_subfolders,
-          zipFileName: "/tmp/__" + Date.now() + '.zip'
-      },function(err,result){
-          if(err)
-              console.error(err);
-          else{
-              var lastFile = result.zippedFiles[result.zippedFiles.length-1];
-              if(lastFile)
-                  console.log('last key ', lastFile.Key); // next time start from here
-          }
-  });
+   
+  var filesArray = []
+  var files = s3.listObjects(params).createReadStream()
+  var xml = new XmlStream(files)
+  xml.collect('Key')
+  xml.on('endElement: Key', function(item) {
+    console.log(item)
+    filesArray.push(item['$text'].substr(folder.length))
+  })
+   
+  xml
+    .on('end', function () {
+      zip(filesArray)
+    })
+   
+  function zip(files) {
+    console.log(files)
+    var output = fs.createWriteStream('/tmp/use-s3-zip.zip'))
+    s3Zip
+     .archive({ region: region, bucket: bucket }, folder, files)
+     .pipe(output)
+    console.log("done")
+  }
 }
